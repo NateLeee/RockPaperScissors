@@ -22,13 +22,8 @@ struct ContentView: View {
     @State private var gameCounter: Int = 0 {
         didSet {
             if (gameCounter == 10) {
-                gameCounter = 0
-                
                 // Try to invoke a func
                 showAlert()
-                
-                // Reset score
-                score = 0
             }
         }
     }
@@ -102,10 +97,14 @@ struct ContentView: View {
                     }
                 }
             }
-            
         }
         .alert(isPresented: $showingAlert) {
-            Alert(title: Text("Game Stats"), message: Text("Your score: \(self.score)"), dismissButton: .default(Text("👌")))
+            // Alert(title: Text("Game Stats"), message: Text("Your score: \(self.score)"), dismissButton: .default(Text("👌")))
+            Alert(title: Text("Game Stats"), message: Text("Your score: \(self.score)"), dismissButton: .default(Text("👌"), action: {
+                // Reset score
+                self.score = 0
+                self.gameCounter = 0
+            }))
         }
     }
     
