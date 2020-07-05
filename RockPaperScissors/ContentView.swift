@@ -15,6 +15,7 @@ enum GameRule: Int {
 
 struct ContentView: View {
     static let moves = ["Rock", "Paper", "Scissors"]
+    static let winningDic = ["Rock": "Paper", "Paper": "Scissors", "Scissors": "Rock"] // Pre-set this rule book.
     
     @State private var currentMove: String = moves[Int.random(in: 0..<3)]
     @State private var rule = GameRule(rawValue: Int.random(in: 0...1))
@@ -32,49 +33,24 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 27) {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Game Counter: \(gameCounter)")
+                // Text("Game Counter: \(gameCounter)") // Hide this!
                 Text("Score: \(score)")
-                Text("Computer Move: \(currentMove)")
+                Text("Computer's Move: \(currentMove)")
                 Text("And you should: \(rule == .ToWin ? "WIN" : "LOSE")!")
             }
             
-            HStack {
+            HStack(spacing: 15) {
                 ForEach(ContentView.moves, id: \.self) { move in
                     Button(action: {
-                        switch self.currentMove {
-                        case "Rock":
-                            if (move == "Paper" && self.rule == .ToWin) {
-                                self.score += 1
-                            } else if (self.rule == .ToLose) {
-                                self.score += 1
-                            } else if (move == "Rock") {
-                            } else {
-                                self.score -= 1
-                            }
-                            
-                            
-                        case "Paper":
-                            if (move == "Scissors" && self.rule == .ToWin) {
-                                self.score += 1
-                            } else if (self.rule == .ToLose) {
-                                self.score += 1
-                            } else if (move == "Paper") {
-                            } else {
-                                self.score -= 1
-                            }
-                            
-                            
-                        case "Scissors":
-                            if (move == "Rock" && self.rule == .ToWin) {
-                                self.score += 1
-                            } else if (self.rule == .ToLose) {
-                                self.score += 1
-                            } else if (move == "Scissors") {
-                            } else {
-                                self.score -= 1
-                            }
-                            
-                        default: break
+                        // Logic goes here
+                        if (move == ContentView.winningDic[self.currentMove] && self.rule == .ToWin) {
+                            self.score += 1
+                        } else if (move == self.currentMove) {
+                            // Tight, do nothing
+                        } else if (self.rule == .ToLose) {
+                            self.score += 1
+                        } else {
+                            self.score -= 1
                         }
                         
                         // Refresh question
@@ -84,12 +60,14 @@ struct ContentView: View {
                         // Increment the game counter
                         self.gameCounter += 1
                         
-                        
                     }) {
                         Text(move)
+                            .frame(width: 68)
                             .padding()
+                            .font(Font.body.bold())
                             .foregroundColor(.white)
                             .background(Color.blue)
+                            .cornerRadius(9.0)
                     }
                 }
             }
@@ -101,10 +79,6 @@ struct ContentView: View {
                 self.gameCounter = 0
             }))
         }
-    }
-    
-    func referee() {
-        
     }
     
     func showAlert() {
