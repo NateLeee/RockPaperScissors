@@ -19,10 +19,26 @@ struct ContentView: View {
     @State private var currentMove: String = moves[Int.random(in: 0..<3)]
     @State private var rule = GameRule(rawValue: Int.random(in: 0...1))
     @State private var score: Int = 0
+    @State private var gameCounter: Int = 0 {
+        didSet {
+            if (gameCounter == 10) {
+                gameCounter = 0
+                
+                // Try to invoke a func
+                showAlert()
+                
+                // Reset score
+                score = 0
+            }
+        }
+    }
+    @State private var showingAlert = false
+    
     
     var body: some View {
         VStack(spacing: 27) {
             VStack(alignment: .leading, spacing: 12) {
+                Text("Game Counter: \(gameCounter)")
                 Text("Score: \(score)")
                 Text("Computer Move: \(currentMove)")
                 Text("And you should: \(rule == .ToWin ? "WIN" : "LOSE")!")
@@ -38,6 +54,7 @@ struct ContentView: View {
                                 self.score += 1
                             } else if (self.rule == .ToLose) {
                                 self.score += 1
+                            } else if (move == "Rock") {
                             } else {
                                 self.score -= 1
                             }
@@ -48,6 +65,7 @@ struct ContentView: View {
                                 self.score += 1
                             } else if (self.rule == .ToLose) {
                                 self.score += 1
+                            } else if (move == "Paper") {
                             } else {
                                 self.score -= 1
                             }
@@ -58,6 +76,7 @@ struct ContentView: View {
                                 self.score += 1
                             } else if (self.rule == .ToLose) {
                                 self.score += 1
+                            } else if (move == "Scissors") {
                             } else {
                                 self.score -= 1
                             }
@@ -71,6 +90,10 @@ struct ContentView: View {
                         self.currentMove = ContentView.moves[Int.random(in: 0..<3)]
                         self.rule = GameRule(rawValue: Int.random(in: 0...1))
                         
+                        // Increment the game counter
+                        self.gameCounter += 1
+                        
+                        
                     }) {
                         Text(move)
                             .padding()
@@ -81,6 +104,13 @@ struct ContentView: View {
             }
             
         }
+        .alert(isPresented: $showingAlert) {
+            Alert(title: Text("Game Stats"), message: Text("Your score: \(self.score)"), dismissButton: .default(Text("👌")))
+        }
+    }
+    
+    func showAlert() {
+        showingAlert = true
     }
 }
 
