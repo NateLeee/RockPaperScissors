@@ -32,7 +32,45 @@ struct ContentView: View {
                 ForEach(ContentView.moves, id: \.self) { move in
                     Button(action: {
                         // TODO: - Implement this logic
-                        print(move)
+                        switch self.currentMove {
+                        case "Rock":
+                            if (move == "Paper" && self.rule == .ToWin) {
+                                self.score += 1
+                            } else if (self.rule == .ToLose) {
+                                self.score += 1
+                            } else {
+                                self.score -= 1
+                            }
+                            break
+                            
+                        case "Paper":
+                            if (move == "Scissors" && self.rule == .ToWin) {
+                                self.score += 1
+                            } else if (self.rule == .ToLose) {
+                                self.score += 1
+                            } else {
+                                self.score -= 1
+                            }
+                            break
+                            
+                        case "Scissors":
+                            if (move == "Rock" && self.rule == .ToWin) {
+                                self.score += 1
+                            } else if (self.rule == .ToLose) {
+                                self.score += 1
+                            } else {
+                                self.score -= 1
+                            }
+                            break
+                            
+                        default:
+                            break
+                        }
+                        
+                        // Refresh question
+                        self.currentMove = ContentView.moves[Int.random(in: 0..<3)]
+                        self.rule = GameRule(rawValue: Int.random(in: 0...1))
+                        
                     }) {
                         Text(move)
                             .padding()
