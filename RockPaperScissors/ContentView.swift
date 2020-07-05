@@ -19,16 +19,15 @@ struct ContentView: View {
     @State private var currentMove: String = moves[Int.random(in: 0..<3)]
     @State private var rule = GameRule(rawValue: Int.random(in: 0...1))
     @State private var score: Int = 0
+    @State private var showingAlert = false
     @State private var gameCounter: Int = 0 {
         didSet {
             if (gameCounter == 10) {
-                // Try to invoke a func
+                // Try to invoke a func, which is to show an alert.
                 showAlert()
             }
         }
     }
-    @State private var showingAlert = false
-    
     
     var body: some View {
         VStack(spacing: 27) {
@@ -42,7 +41,6 @@ struct ContentView: View {
             HStack {
                 ForEach(ContentView.moves, id: \.self) { move in
                     Button(action: {
-                        // TODO: - Implement this logic
                         switch self.currentMove {
                         case "Rock":
                             if (move == "Paper" && self.rule == .ToWin) {
@@ -53,7 +51,7 @@ struct ContentView: View {
                             } else {
                                 self.score -= 1
                             }
-                            break
+                            
                             
                         case "Paper":
                             if (move == "Scissors" && self.rule == .ToWin) {
@@ -64,7 +62,7 @@ struct ContentView: View {
                             } else {
                                 self.score -= 1
                             }
-                            break
+                            
                             
                         case "Scissors":
                             if (move == "Rock" && self.rule == .ToWin) {
@@ -75,10 +73,8 @@ struct ContentView: View {
                             } else {
                                 self.score -= 1
                             }
-                            break
                             
-                        default:
-                            break
+                        default: break
                         }
                         
                         // Refresh question
@@ -99,13 +95,16 @@ struct ContentView: View {
             }
         }
         .alert(isPresented: $showingAlert) {
-            // Alert(title: Text("Game Stats"), message: Text("Your score: \(self.score)"), dismissButton: .default(Text("👌")))
             Alert(title: Text("Game Stats"), message: Text("Your score: \(self.score)"), dismissButton: .default(Text("👌"), action: {
                 // Reset score
                 self.score = 0
                 self.gameCounter = 0
             }))
         }
+    }
+    
+    func referee() {
+        
     }
     
     func showAlert() {
